@@ -8,10 +8,11 @@ from dagster import (
 from dagster_aws.s3 import S3PickleIOManager, S3Resource
 
 from . import assets
+from .resources import cl_scraper_resource
 
-daily_refresh_schedule = ScheduleDefinition(
-    job=define_asset_job(name="all_assets_job"), cron_schedule="0 0 * * *"
-)
+#daily_refresh_schedule = ScheduleDefinition(
+#    job=define_asset_job(name="all_assets_job"), cron_schedule="0 0 * * *"
+#)
 
 my_s3_resource = S3Resource()
 
@@ -30,6 +31,7 @@ defs = Definitions(
             s3_bucket=EnvVar("S3_BUCKET"),
         ),
         "s3": my_s3_resource,
+        "cl_scraper_resource": resources.cl_scraper_resource
     },
     schedules=[daily_refresh_schedule],
 )
