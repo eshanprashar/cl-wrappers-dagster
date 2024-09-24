@@ -1,0 +1,4 @@
+locations:
+- code_source:
+    module_name: quickstart_aws.definitions
+  location_name: courtlistener_etl
