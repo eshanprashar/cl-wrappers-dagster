@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: cl_wrappers_aws
+Version: 0.0.0
+Requires-Dist: dagster
+Requires-Dist: dagster-aws
+Requires-Dist: dagster-cloud
+Requires-Dist: pandas
+Requires-Dist: matplotlib
+Requires-Dist: requests
+Provides-Extra: dev
+Requires-Dist: dagster-webserver; extra == "dev"
+Requires-Dist: pytest; extra == "dev"

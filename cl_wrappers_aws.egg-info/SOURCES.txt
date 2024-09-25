@@ -1,0 +1,17 @@
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+cl_wrappers_aws/__init__.py
+cl_wrappers_aws/definitions.py
+cl_wrappers_aws.egg-info/PKG-INFO
+cl_wrappers_aws.egg-info/SOURCES.txt
+cl_wrappers_aws.egg-info/dependency_links.txt
+cl_wrappers_aws.egg-info/requires.txt
+cl_wrappers_aws.egg-info/top_level.txt
+cl_wrappers_aws/assets/__init__.py
+cl_wrappers_aws/assets/cl_extract.py
+cl_wrappers_aws/assets/cl_transform.py
+cl_wrappers_aws/assets/constants.py
+cl_wrappers_aws/resources/__init__.py
+cl_wrappers_aws/resources/api_scraper.py
