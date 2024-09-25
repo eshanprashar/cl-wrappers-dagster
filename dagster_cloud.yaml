@@ -1,4 +1,4 @@
 locations:
 - code_source:
     module_name: cl_wrappers_aws.definitions
-    location_name: courtlistener_etl
+location_name: courtlistener_etl

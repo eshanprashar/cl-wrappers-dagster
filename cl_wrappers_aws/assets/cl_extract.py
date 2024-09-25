@@ -2,6 +2,7 @@ from dagster import asset, EnvVar, OpExecutionContext
 from dagster_aws.s3 import S3Resource
 from cl_wrappers_aws.resources.api_scraper import APIScraper, CLScraper
 
+# Load environment variables
 api_token = EnvVar("API_TOKEN")
 
 @asset
