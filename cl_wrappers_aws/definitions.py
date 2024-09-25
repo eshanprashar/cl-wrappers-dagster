@@ -33,5 +33,5 @@ defs = Definitions(
         "s3": my_s3_resource,
         #"cl_scraper_resource": resources.cl_scraper_resource
     },
-    schedules=[daily_refresh_schedule],
+    #schedules=[daily_refresh_schedule],
 )
