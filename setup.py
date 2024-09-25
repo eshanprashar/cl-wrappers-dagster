@@ -9,7 +9,8 @@ setup(
         "dagster-cloud",
         "pandas",
         "matplotlib",
-        "wordcloud",
+        "requests",
+        "glob",
     ],
     extras_require={"dev": ["dagster-webserver", "pytest"]},
 )

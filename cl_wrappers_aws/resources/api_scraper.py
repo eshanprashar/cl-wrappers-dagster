@@ -10,20 +10,18 @@
 
 
 import os
-from dotenv import load_dotenv
 import requests
 import logging
 import pandas as pd
 import json
 import csv
 import time
-from utils import get_api_token, log_error_to_file
-
+from dagster_aws.s3 import S3Resource
+from io import BytesIO, StringIO
 
 class APIScraper:
     def __init__(
-        self, base_url, api_token=None, max_requests_per_hour=5000, log_dir="logs"
-    ):
+        self, base_url, api_token=None, max_requests_per_hour=5000, log_dir="logs"):
         """
         Initialize the APIScraper.
 
@@ -44,10 +42,9 @@ class APIScraper:
         # Create log directory if it does not exist
         os.makedirs(log_dir, exist_ok=True)
 
-    @log_error_to_file(log_dir="logs")
-    def make_session(self, api_token):
+    def make_session(self, api_token,context):
         """
-        Create and return a session with the required headers.
+        Create and return a session with the required headers, using Dagster's logging.
 
         Args:
             api_token (str): The API token for authentication.
@@ -55,12 +52,14 @@ class APIScraper:
         Returns:
             requests.Session: A session object with the appropriate headers.
         """
+        context.log.info("Creating a new session...")
         session = requests.Session()
         if api_token:
             session.headers.update({"Authorization": f"Token {api_token}"})
+        context.log.info("Session created successfully!")
         return session
 
-    def set_data_directory(self, endpoint):
+    def set_data_directory(self, endpoint,context):
         """Creates a data directory for the endpoint if it doesn't exist already"""
         # Get the current working directory
         current_dir = os.getcwd()
@@ -68,22 +67,19 @@ class APIScraper:
         root_dir = os.path.dirname(
             current_dir
         )  # in our case, this should take us to 'scripts'
-        if "scripts" in root_dir:
-            # Go up one more level
-            root_dir = os.path.dirname(
-                root_dir
-            )  # this should take us to the root directory
-        # Define the data directory relative to root
-        data_dir = os.path.join(root_dir, "data", endpoint)
-
+        if "cl_wrappers" in root_dir:
+            data_dir = os.path.join(root_dir, "data", endpoint)
+            context.log.info(f"Data directory found and set to {data_dir}")
+        else:
+            print("Please run this script from the 'cl_wrappers' directory")
+        
         # Create the data directory if it doesn't exist
         if not os.path.exists(data_dir):
             os.makedirs(data_dir)
-
-        print(f"Data directory set to {data_dir}")
+            context.log.info(f"Data directory created at {data_dir}")
         return data_dir
 
-    def create_log_file(self, endpoint, is_author_based=False, author_id=None):
+    def create_log_file(self, endpoint, is_author_based=False, author_id=None,context=None):
         """Create a log file based on the endpoint or author ID
         Args:
             endpoint (str): The API endpoint to fetch data from.
@@ -106,9 +102,11 @@ class APIScraper:
         if not os.path.exists(log_path):
             with open(log_path, "w") as f:
                 pass  # This will create an empty file if it doesn't exist
-        print(f"Log file created at {log_path}")
+        
+        if context:
+            context.log.info(f"Log file created at {log_path}")
 
-    def log_progress(self, current_page):
+    def log_progress(self, current_page, context):
         """
         Log the progress of the data fetching process.
         Simple print statement for now. Can be extended to write to a log file.
@@ -116,17 +114,16 @@ class APIScraper:
         Args:
             current_page (int): The current page number.
         """
-        print(f"Request successful with code 200! Now, fetching page {current_page}...")
+        context.log.info(f"Request successful! Fetching page {current_page}...")
 
     def save_current_next_url_and_page(
-        self, url, next_url, page_number, is_author_based=False, author_id=None
-    ):
+        self, url, next_url, page_number,context):
         """Save the next URL and the last successfully fetched page number to the log file."""
         with open(self.log_file, "w") as f:
             f.write(f"Current URL: {url}\n")
             f.write(f"Next URL: {next_url}\n")
             f.write(f"Last successfully fetched page: {page_number}\n")
-        print(f"Next URL and page number saved to {self.log_file}")
+        context.log.info(f"Current, next URL and page number saved to {self.log_file}")
 
     # Function to get the last page number fetched
     def get_last_page(self):
@@ -138,19 +135,12 @@ class APIScraper:
             with open(self.log_file, "r") as f:
                 log_content = f.read().strip()
                 # The log file contains "Last successfully fetched page: X"
-                last_page_line = [
-                    line
-                    for line in log_content.split("\n")
-                    if "Last successfully fetched page" in line
-                ]
-                if last_page_line:
-                    last_page = int(
-                        last_page_line[0].split(":")[-1].strip()
-                    )  # Extract page number
-                    return last_page
+                for line in log_content.split("\n"):
+                    if "Last successfully fetched page" in line:
+                        last_page = int(line[0].split(":")[-1].strip())  # Extract page number
+                        return last_page
         except:
             return 1  # Default to start from page 1 if no valid log file is found
-        return 1  # Default to start from page 1 if no log file is found
 
     def get_next_url(self):
         """
@@ -160,33 +150,41 @@ class APIScraper:
             with open(self.log_file, "r") as f:
                 log_content = f.read().strip()
                 # The log file contains "Next URL: <url>"
-                next_url_line = [
-                    line for line in log_content.split("\n") if "Next URL:" in line
-                ]
-                if next_url_line:
-                    next_url = next_url_line[0].split("Next URL: ")[-1].strip()
-                    return next_url
+                for line in log_content.split("\n"):
+                    if "Next URL" in line:
+                        next_url = line[0].split("Next URL: ")[-1].strip()
+                        return next_url
         except:
             return None  # Default to None if no valid log file is found
-        return None  # Default to None if no log file is found
 
-    @log_error_to_file(log_dir="logs")
     def fetch_data(
-        self, endpoint, params=None, save_after_pages=10, is_author_based=False
-    ):
+        self, 
+        endpoint, 
+        params=None, 
+        is_author_based=False, 
+        save_logic= 'save_after_pages', # Possible options are 'author_level' or 'save_after_pages'
+        num_pages_to_save = None, # Required argument if save_logic is 'save_after_pages'
+        return_all_data = False,
+        context=None):
         """
         Fetch data from the API endpoint with pagination handling.
 
         Args:
             endpoint (str): The API endpoint to fetch data from.
-            params (dict, optional): Additional query parameters for the API request. Defaults to None.
-            save_after_pages (int, optional): Save data to a file after every `save_after_pages` pages. Defaults to 10 for testing.
-            is_author_based (bool, optional): If True, use a different log file per author. Defaults to False.
-            author_id (int, optional): If is_author_based is True, this should contain the author ID for creating a unique log file.
-
-        Returns:
-            list: A list of data fetched from the API endpoint.
+            params (dict, optional): Additional query parameters for the API request.
+            is_author_based (bool, optional): If True, the logic will handle saving data per author. Defaults to False.
+            save_logic (str): The logic for saving data. 'author_level' or 'save_after_pages'.
+            num_pages_to_save (int, optional): Number of pages after which to save data if save_logic is 'save_after_pages'. 
+                                               This is required when save_logic is 'save_after_pages'.
+            return_all_data (bool, optional): Whether to return the full dataset after fetching. Defaults to False.
+            context: Additional context for log management.
         """
+        # Ensure num_pages_to_save is provided when using 'save_after_pages'
+        if save_logic == 'save_after_pages' and num_pages_to_save is None:
+            error_message = "num_pages_to_save must be provided when save_logic is 'save_after_pages'."
+            context.log.error(error_message)
+            raise ValueError(error_message)
+
         # Check if is_author_based is True
         if is_author_based:
             # Extract author_id from the params['q'] query string
@@ -201,7 +199,7 @@ class APIScraper:
         self.create_log_file(endpoint, is_author_based, author_id)
 
         # Get the next URL to resume from, if available
-        next_url = self.get_next_url()  # NEEDS TO BE CHANGED
+        next_url = self.get_next_url()  
         url = next_url if next_url else f"{self.base_url}{endpoint}/"
 
         all_data = []
@@ -228,12 +226,14 @@ class APIScraper:
                 # Handle rate limit
                 if self.request_count >= self.max_requests_per_hour:
                     print(f"API limit reached. Pausing for 1 hour...")
+                    context.log.info(f"API limit reached. Pausing for 1 hour...")
                     time.sleep(3600)  # Sleep for 1 hour
                     self.request_count = 0  # Reset the request count after sleeping
 
                 # Retry mechanism
                 for attempt in range(max_retries):
                     print(f"Fetching data from page {page_number}...")
+                    context.log.info(f"Fetching data from page {page_number}...")
                     response = self.session.get(url, params=params)
                     self.request_count += 1
                     print(f"Request count: {self.request_count}")
@@ -244,9 +244,11 @@ class APIScraper:
                         break
                     # If the response indicates a server side error, log the error and retry
                     elif response.status_code >= 500:
-                        print(
-                            f"Server error {response.status_code}: {response.reason}. Retrying in {retry_delay} seconds..."
+                        error_message = (
+                            f"Server error {response.status_code}: {response.reason}"
                         )
+                        context.log.info(error_message)
+                        print(error_message)
                         time.sleep(retry_delay)
                         retry_delay *= 2  # exponential backoff
                     else:
@@ -255,11 +257,12 @@ class APIScraper:
                             f"Error {response.status_code}: {response.reason}"
                         )
                         print(error_message)
+                        context.log.info(error_message)
                         raise requests.exceptions.HTTPError(error_message)
                 else:
                     # If all retries fail, raise an exception
                     error_message = f"Failed to fetch page {page_number} after {max_retries} attempts."
-                    print(error_message)
+                    context.log.info(error_message)
                     raise requests.exceptions.RetryError(error_message)
 
                 # Reset the retry delay
@@ -271,31 +274,20 @@ class APIScraper:
 
                 # Update the total number of fetched items
                 total_fetched += len(data.get("results", []))
+                update_message = f"Total items successfully fetched from page {page_number}: {total_fetched}"
+                context.log.info(update_message)
+                print(update_message)
 
-                # Print progress
-                print(
-                    f"Total items successfully fetched from page {page_number}: {total_fetched}"
-                )
-
-                # Save data incrementally to csv
-                if not is_author_based and page_number % save_after_pages == 0:
-                    # Process the data
-                    all_data = self.process_data(all_data)
-                    # Define filename using endpoint and page number
-                    csv_filename = os.path.join(
-                        self.set_data_directory(endpoint),
-                        f"{endpoint}_page_{page_number}.csv",
-                    )
-                    # Save the data to a CSV file
-                    self.save_to_csv(data=all_data, filename=csv_filename)
-                    print(f"Data saved to {csv_filename}")
-                    all_data = []  # Reset the data after saving to avoid memory issues
+                # Process save logic
+                if save_logic == 'save_after_pages' and page_number % num_pages_to_save == 0:
+                    # Process and save incrementally
+                    self.trigger_save_logic(endpoint, all_data, page_number, num_pages_to_save)
+                    all_data = []  # Reset the data after saving
 
                 # Save next URL and page number
                 self.save_current_next_url_and_page(
                     url, data.get("next", "None"), page_number
                 )
-
                 # Handle pagination
                 if "next" in data and data["next"]:
                     url = data["next"]
@@ -308,27 +300,54 @@ class APIScraper:
             print(f"Last fetched page: {page_number}")
             print(f"Total records fetched: {total_fetched}")
             print(
-                "Don't worry, the progress has been saved. You can resume from the last page."
+                "You can resume from the last page."
             )
 
         finally:
             print("Exiting gracefully. The last page and URL were logged.")
         total_time = time.time() - start_time
         print(f"Total {total_fetched} records fetched in {total_time/60:.2f} minutes!")
-        return all_data
+        if return_all_data:
+            return all_data
+        else:
+            return {"status": "success", "message": "Data saved to CSV", "pages_fetched": total_pages}
+
+    def trigger_save_logic(self, endpoint, data, page_number, num_pages_to_save,context):
+        """
+        Save data to CSV based on the page number and save logic.
+        
+        Args:
+            endpoint (str): The API endpoint.
+            data (list): The fetched data to save.
+            page_number (int): The current page number.
+            num_pages_to_save (int): How many pages to save in one file.
+        """
+        # Process the data
+        processed_data = self.process_data(data,context)
+
+        # Define filename using endpoint and page number
+        csv_filename = os.path.join(
+            self.set_data_directory(endpoint),
+            f"{endpoint}_pages_{page_number - num_pages_to_save + 1}_to_{page_number}.csv"
+        )
+
+        # Save the data to a CSV file
+        self.save_to_csv(processed_data,csv_filename,context)
 
     # Function to process and flatten the data
-    def process_data(self, data):
+    def process_data(self,data,context):
         processed_data = []
         for item in data:
             # Flatten the dictionary and handle missing keys
             entry = {key: item.get(key, None) for key in item}
             processed_data.append(entry)
-        print(f"Total number of entries processed: {len(processed_data)}")
+        processing_message = f"Processed {len(processed_data)} entries"
+        context.log.info(processing_message)
+        print(processing_message)
         return processed_data
 
     # Function to save the data to a CSV file
-    def save_to_csv(self, data, filename):
+    def save_to_csv(self, data, filename,storage_type='local',s3_bucket=None,s3_key=None,context=None):
         """
         Save the processed data to a CSV file.
 
@@ -337,21 +356,38 @@ class APIScraper:
             filename (str): The name of the CSV file to save the data.
         """
         if not data:
-            print(f"No data to save for {filename}")
+            error_message = f"No data to save for {filename}"
+            context.log.error(error_message)
+            print(error_message)
             return
 
-        # Ensure the directory exists
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-
-        # Write to CSV
-        with open(filename, "w", newline="") as csvfile:
-            fieldnames = data[0].keys()  # Get the column names from the first record
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()  # Write the header
-            for item in data:
-                writer.writerow(item)  # Write each row
-        print(f"Data saved to {filename}")
-
+        if storage_type == 'local':
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            # Write to CSV
+            with open(filename, "w", newline="") as csvfile:
+                fieldnames = data[0].keys()  # Get the column names from the first record
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writeheader()  # Write the header
+                for item in data:
+                    writer.writerow(item)  # Write each row
+            success_message = f"Data saved to {filename} in local storage"
+            context.log.info(success_message)
+            print(success_message)
+        elif storage_type == 's3' and s3_bucket and s3_key:
+            try:
+                csv_buffer = io.StringIO()
+                writer = csv.DictWriter(csv_buffer, fieldnames=data[0].keys())
+                writer.writeheader()
+                writer.writerows(data)
+                s3_client.put_object(Bucket=s3_bucket, Key=s3_key, Body=csv_buffer.getvalue())
+                success_message = f"Data saved to {s3_key} in S3 bucket {s3_bucket}"
+                context.log.info(success_message)
+                print(success_message)
+            except Exception as e:
+                error_message = f"Error saving data to S3: {e}"
+                context.log.error(error_message)
+                print(error_message)
 
 class CLScraper(APIScraper):
     """This class is used to scrape data from CourtListener
@@ -373,7 +409,7 @@ class CLScraper(APIScraper):
             max_requests_per_hour=max_requests_per_hour,
         )
 
-    def fetch_positions(self, **kwargs):
+    def fetch_positions(self,context,storage_type='local',s3_bucket=None, s3_key=None, **kwargs):
         """
         Fetch positions data from the CourtListener API.
 
@@ -383,9 +419,19 @@ class CLScraper(APIScraper):
         Returns:
             list: A list of positions data.
         """
-        return self.fetch_data(endpoint="positions", params=kwargs)
+        return self.fetch_data(
+            endpoint="positions",
+            context=context,
+            is_author_based=False,
+            save_logic= 'save_after_pages',
+            num_pages_to_save = 20, # Required argument if save_logic is 'save_after_pages'; save a csv after every 20 pages
+            return_all_data = False, # we don't need to assign a variable to the return value
+            storage_type=storage_type,
+            s3_bucket=s3_bucket,
+            s3_key=s3_key,
+            params=params)
 
-    def fetch_education(self, **kwargs):
+    def fetch_education(self,context,storage_type='local',s3_bucket=None, s3_key=None, **kwargs):
         """
         Fetch education data from the CourtListener API.
 
@@ -395,9 +441,19 @@ class CLScraper(APIScraper):
         Returns:
             list: A list of education data.
         """
-        return self.fetch_data(endpoint="education", params=kwargs)
+        return self.fetch_data(
+            endpoint="education",
+            context=context,
+            is_author_based=False,
+            save_logic= 'save_after_pages',
+            num_pages_to_save = 20, # Required argument if save_logic is 'save_after_pages'; save a csv after every 20 pages
+            return_all_data = False, # we don't need to assign a variable to the return value
+            storage_type=storage_type,
+            s3_bucket=s3_bucket,
+            s3_key=s3_key,
+            params=params)
 
-    def fetch_financial_disclosures(self, **kwargs):
+    def fetch_financial_disclosures(self,context,storage_type='local',s3_bucket=None, s3_key=None, **kwargs):
         """
         Fetch financial disclosures data from the CourtListener API.
 
@@ -407,9 +463,35 @@ class CLScraper(APIScraper):
         Returns:
             list: A list of financial disclosures data.
         """
-        return self.fetch_data(endpoint="financial-disclosures", params=kwargs)
+        return self.fetch_data(
+            endpoint="financial-disclosures",
+            context=context,
+            is_author_based=False,
+            save_logic= 'save_after_pages',
+            num_pages_to_save = 20, # Required argument if save_logic is 'save_after_pages'; save a csv after every 20 pages
+            return_all_data = False, # we don't need to assign a variable to the return value
+            storage_type=storage_type,
+            s3_bucket=s3_bucket,
+            s3_key=s3_key,
+            params=params)
 
-    def fetch_dockets_per_author_id(self, author_id, is_author_based=True, **kwargs):
+    def extract_judge_name(self,data):
+        '''Extract judge name from data'''
+        if data:
+            judge_name = "name not found"
+            for entry in data:
+                if entry.get("judge"):
+                    judge_name = entry.get("judge")
+                    break
+        else:
+            judge_name = "data not found"
+        
+        # Sanitizing judge name before assigning to filename
+        judge_name = "".join(c if c.isalnum() else "_" for c in judge_name)
+        return judge_name
+        
+    
+    def fetch_dockets_per_author_id(self,context,author_id, is_author_based=True,storage_type='local',s3_bucket=None, s3_key=None, **kwargs):
         """
         Fetch dockets data from the CourtListener API.
 
@@ -423,30 +505,28 @@ class CLScraper(APIScraper):
         endpoint = "search"
         params = {"q": f"author_id:{author_id}"}
         all_data = self.fetch_data(
-            endpoint=endpoint, params=params, is_author_based=True
+            endpoint=endpoint,
+            context=context,
+            is_author_based=True,
+            save_logic= 'author_level',
+            return_all_data = True, # we want fetch_data to return the data
+            storage_type=storage_type,
+            s3_bucket=s3_bucket,
+            s3_key=s3_key,
+            params=params
         )
-
-        # If data is not empty, extract name and save to a CSV file
-        if all_data:
-            judge_name = "name not found"
-            for entry in all_data:
-                if entry.get("judge"):
-                    judge_name = entry.get("judge")
-                    break
-        else:
-            judge_name = "data not found"
-
-        # Sanitizing judge name before assigning to filename
-        judge_name = "".join(c if c.isalnum() else "_" for c in judge_name)
+        # Extract judge name from the data
+        judge_name = self.extract_judge_name(all_data)
 
         # Define the csv filename using judge name and author ID
         csv_filename = os.path.join(
             self.set_data_directory("dockets"), f"{judge_name}_{author_id}.csv"
         )
         self.save_to_csv(data=self.process_data(all_data), filename=csv_filename)
-        print(f"Data for author_id {author_id} saved to {csv_filename}")
-        return all_data
+        success_message = f"Data for author_id {author_id} saved to {csv_filename}"
+        context.log.info(success_message)
+        print(success_message)
 
-@resource
-def cl_scraper_resource(init_context):
-    return CLScraper(api_key=init_context.resource_config["api_key"])  
+#@resource
+#def cl_scraper_resource(init_context):
+#    return CLScraper(api_key=init_context.resource_config["api_key"])  
