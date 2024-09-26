@@ -1,0 +1,87 @@
+[32m2024-09-26 00:27:22 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - 59844 - LOGS_CAPTURED - Started capturing logs in process (pid: 59844).
+[32m2024-09-26 00:27:22 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - 59844 - position_csv_files - STEP_START - Started execution of step "position_csv_files".
+[32m2024-09-26 00:27:22 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Creating a new session...
+[32m2024-09-26 00:27:22 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Session created successfully!
+[32m2024-09-26 00:27:22 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Starting position data extraction...
+[32m2024-09-26 00:27:22 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Log file created!
+[32m2024-09-26 00:27:22 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Last fetched page: 54
+[32m2024-09-26 00:27:22 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 50...
+[32m2024-09-26 00:27:23 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 50: 20
+[32m2024-09-26 00:27:23 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Processed 20 entries
+[32m2024-09-26 00:27:23 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Data directory set to cl_wrappers_aws/data/positions
+[32m2024-09-26 00:27:23 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Data saved to cl_wrappers_aws/data/positions/positions_pages_46_to_50.csv in local storage
+[32m2024-09-26 00:27:23 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:23 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 51...
+[32m2024-09-26 00:27:24 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 51: 40
+[32m2024-09-26 00:27:24 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:24 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 52...
+[32m2024-09-26 00:27:25 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 52: 60
+[32m2024-09-26 00:27:25 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:25 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 53...
+[32m2024-09-26 00:27:25 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 53: 80
+[32m2024-09-26 00:27:25 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:25 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 54...
+[32m2024-09-26 00:27:26 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 54: 100
+[32m2024-09-26 00:27:26 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:26 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 55...
+[32m2024-09-26 00:27:27 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 55: 120
+[32m2024-09-26 00:27:27 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Processed 100 entries
+[32m2024-09-26 00:27:27 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Data directory set to cl_wrappers_aws/data/positions
+[32m2024-09-26 00:27:27 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Data saved to cl_wrappers_aws/data/positions/positions_pages_51_to_55.csv in local storage
+[32m2024-09-26 00:27:27 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:27 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 56...
+[32m2024-09-26 00:27:28 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 56: 140
+[32m2024-09-26 00:27:28 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:28 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 57...
+[32m2024-09-26 00:27:28 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 57: 160
+[32m2024-09-26 00:27:28 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:28 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 58...
+[32m2024-09-26 00:27:29 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 58: 180
+[32m2024-09-26 00:27:29 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:29 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 59...
+[32m2024-09-26 00:27:30 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 59: 200
+[32m2024-09-26 00:27:30 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:30 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 60...
+[32m2024-09-26 00:27:31 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 60: 220
+[32m2024-09-26 00:27:31 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Processed 100 entries
+[32m2024-09-26 00:27:31 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Data directory set to cl_wrappers_aws/data/positions
+[32m2024-09-26 00:27:31 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Data saved to cl_wrappers_aws/data/positions/positions_pages_56_to_60.csv in local storage
+[32m2024-09-26 00:27:31 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:31 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 61...
+[32m2024-09-26 00:27:32 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 61: 240
+[32m2024-09-26 00:27:32 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:32 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 62...
+[32m2024-09-26 00:27:32 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 62: 260
+[32m2024-09-26 00:27:32 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:32 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 63...
+[32m2024-09-26 00:27:33 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 63: 280
+[32m2024-09-26 00:27:33 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:33 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 64...
+[32m2024-09-26 00:27:34 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 64: 300
+[32m2024-09-26 00:27:34 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:34 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 65...
+[32m2024-09-26 00:27:35 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 65: 320
+[32m2024-09-26 00:27:35 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Processed 100 entries
+[32m2024-09-26 00:27:35 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Data directory set to cl_wrappers_aws/data/positions
+[32m2024-09-26 00:27:35 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Data saved to cl_wrappers_aws/data/positions/positions_pages_61_to_65.csv in local storage
+[32m2024-09-26 00:27:35 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:35 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 66...
+[32m2024-09-26 00:27:36 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 66: 340
+[32m2024-09-26 00:27:36 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:36 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 67...
+[32m2024-09-26 00:27:37 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 67: 360
+[32m2024-09-26 00:27:37 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:37 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 68...
+[32m2024-09-26 00:27:37 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 68: 380
+[32m2024-09-26 00:27:37 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:37 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Fetching data from page 69...
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total items successfully fetched from page 69: 400
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Current, next URL and page number saved to logs/positions_log.txt
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Max pages limit reached. Exiting...
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Total 400 records fetched in 0.26 minutes!
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mINFO[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Position data extraction completed.
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - 59844 - position_csv_files - STEP_OUTPUT - Yielded output "result" of type "dict". (Type check passed).
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - position_csv_files - Writing S3 object at: s3://research-scrape/dagster/position_csv_files
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - 59844 - position_csv_files - ASSET_MATERIALIZATION - Materialized value position_csv_files.
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - 59844 - position_csv_files - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
+[32m2024-09-26 00:27:38 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - ad8f165f-cb38-439c-a623-7e50b13182a6 - 59844 - position_csv_files - STEP_SUCCESS - Finished execution of step "position_csv_files" in 15.97s.

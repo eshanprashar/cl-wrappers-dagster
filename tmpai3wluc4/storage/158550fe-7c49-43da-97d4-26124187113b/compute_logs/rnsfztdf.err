@@ -1,0 +1,40 @@
+[32m2024-09-26 00:26:13 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 158550fe-7c49-43da-97d4-26124187113b - 59688 - LOGS_CAPTURED - Started capturing logs in process (pid: 59688).
+[32m2024-09-26 00:26:13 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 158550fe-7c49-43da-97d4-26124187113b - 59688 - clean_positions_dataframe - STEP_START - Started execution of step "clean_positions_dataframe".
+[32m2024-09-26 00:26:13 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 158550fe-7c49-43da-97d4-26124187113b - clean_positions_dataframe - Loading S3 object from: s3://research-scrape/dagster/position_csv_files
+[32m2024-09-26 00:26:13 -0500[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 158550fe-7c49-43da-97d4-26124187113b - 59688 - clean_positions_dataframe - STEP_FAILURE - Execution of step "clean_positions_dataframe" failed.
+
+dagster._core.errors.DagsterExecutionLoadInputError: Error occurred while loading input "position_csv_files" of step "clean_positions_dataframe"::
+
+FileNotFoundError: Could not find file dagster/position_csv_files in S3 bucket research-scrape
+
+Stack Trace:
+  File "/Users/eshan23/miniconda3/envs/dagster-cl-aws/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/eshan23/miniconda3/envs/dagster-cl-aws/lib/python3.11/site-packages/dagster/_core/execution/plan/inputs.py", line 620, in _load_input_with_input_manager
+    value = input_manager.load_input(context)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/eshan23/miniconda3/envs/dagster-cl-aws/lib/python3.11/site-packages/dagster_aws/s3/io_manager.py", line 147, in load_input
+    return self.inner_io_manager().load_input(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/eshan23/miniconda3/envs/dagster-cl-aws/lib/python3.11/site-packages/dagster/_core/storage/upath_io_manager.py", line 405, in load_input
+    return self._load_single_input(path, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/eshan23/miniconda3/envs/dagster-cl-aws/lib/python3.11/site-packages/dagster/_core/storage/upath_io_manager.py", line 272, in _load_single_input
+    obj = self.load_from_path(context=context, path=path)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/eshan23/miniconda3/envs/dagster-cl-aws/lib/python3.11/site-packages/dagster_aws/s3/io_manager.py", line 44, in load_from_path
+    raise FileNotFoundError(f"Could not find file {path} in S3 bucket {self.bucket}")
+
+The above exception occurred during handling of the following exception:
+botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the GetObject operation: The specified key does not exist.
+
+Stack Trace:
+  File "/Users/eshan23/miniconda3/envs/dagster-cl-aws/lib/python3.11/site-packages/dagster_aws/s3/io_manager.py", line 41, in load_from_path
+    s3_obj = self.s3.get_object(Bucket=self.bucket, Key=path.as_posix())["Body"].read()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/eshan23/miniconda3/envs/dagster-cl-aws/lib/python3.11/site-packages/botocore/client.py", line 569, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/eshan23/miniconda3/envs/dagster-cl-aws/lib/python3.11/site-packages/botocore/client.py", line 1023, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+[0m
