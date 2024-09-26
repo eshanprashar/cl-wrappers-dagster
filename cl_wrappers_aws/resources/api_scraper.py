@@ -19,7 +19,9 @@ import time
 from dagster_aws.s3 import S3Resource
 from io import BytesIO, StringIO
 
+# These variables can be stored as resources in Dagster
 ROOT_DIR = "cl_wrappers_aws"
+BASE_URL = "https://www.courtlistener.com/api/rest/v4/"
 
 class APIScraper:
     def __init__(
@@ -486,33 +488,18 @@ class CLScraper(APIScraper):
             s3_bucket=s3_bucket,
             s3_key=s3_key,
             params=params)
-
-    def fetch_education(self,context,storage_type='local',s3_bucket=None, s3_key=None, **kwargs):
-        """
-        Fetch education data from the CourtListener API.
-
-        Args:
-            **kwargs: Additional query parameters for the API request.
-
-        Returns:
-            list: A list of education data.
-        """
-        # Define params, default to an empty dictionary if not provided
-        params = kwargs.get('params', {})  # Extract 'params' from kwargs, or use an empty dict
-
-        return self.fetch_data(
-            endpoint="education",
-            context=context,
-            is_author_based=False,
-            save_logic= 'save_after_pages',
-            num_pages_to_save = num_pages_to_save, # Required argument if save_logic is 'save_after_pages'; save a csv after every 20 pages
-            return_all_data = False, # we don't need to assign a variable to the return value
-            storage_type=storage_type,
-            s3_bucket=s3_bucket,
-            s3_key=s3_key,
-            params=params)
-
-    def fetch_financial_disclosures(self,context,storage_type='local',s3_bucket=None, s3_key=None, **kwargs):
+        
+    def fetch_disclosures(
+        self,
+        context,
+        is_author_based=False,
+        save_logic= 'save_after_pages', # Possible options are 'author_level' or 'save_after_pages'
+        num_pages_to_save = 5,
+        max_pages = 20,
+        storage_type='local',
+        s3_bucket=None,
+        s3_key=None,
+        **kwargs):
         """
         Fetch financial disclosures data from the CourtListener API.
 
@@ -531,6 +518,7 @@ class CLScraper(APIScraper):
             is_author_based=False,
             save_logic= 'save_after_pages',
             num_pages_to_save = num_pages_to_save, # Required argument if save_logic is 'save_after_pages'; save a csv after every 20 pages
+            max_pages = max_pages,
             return_all_data = False, # we don't need to assign a variable to the return value
             storage_type=storage_type,
             s3_bucket=s3_bucket,
