@@ -3,23 +3,27 @@ from dagster_aws.s3 import S3Resource
 from cl_wrappers_aws.resources.api_scraper import APIScraper, CLScraper
 
 # Load environment variables
-api_token = EnvVar("API_TOKEN")
+api_token_var = EnvVar("API_TOKEN")
 
 @asset
-def create_CLscraper_object(context: OpExecutionContext) -> CLScraper:
-    cl_scraper = CLScraper(api_token=api_token)
-    context.log.info('CLScraper object created successfully.')
-    return cl_scraper
+def position_csv_files(context:OpExecutionContext, s3: S3Resource) -> None:
+    # Retrieve the api token
+    api_token = api_token_var.get_value()
 
-@asset
-def position_csv_files(context, create_CLscraper_object: CLScraper, s3: S3Resource) -> None:
-    # Asset logic here
+    # Create the CLScraper object
+    cl_scraper = CLScraper(api_token=api_token,context=context)
+    
+    # Log start of the process
     context.log.info("Starting position data extraction...")
-    create_CLscraper_object.fetch_positions(
+    cl_scraper.fetch_positions(
         context=context,
-        storage_type='s3',  # or 'local' depending on your setup
-        s3_bucket='your-s3-bucket-name',
-        s3_key='positions/',
+        is_author_based=False, 
+        save_logic= 'save_after_pages', # Possible options are 'author_level' or 'save_after_pages'
+        num_pages_to_save = 5,
+        max_pages=20,
+        storage_type='local',  # or 'local' depending on your setup
+        s3_bucket=None,
+        s3_key=None,
         # Add any additional parameters if needed
     )
     context.log.info("Position data extraction completed.")
