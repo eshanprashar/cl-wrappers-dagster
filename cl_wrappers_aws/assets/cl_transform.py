@@ -15,8 +15,7 @@ ROOT_DIR = "cl_wrappers_aws"
 @asset
 def consolidated_position_and_title(
     context: OpExecutionContext, 
-    position_csv_files: dict,  # Adding dependency for positions metadata
-    s3: S3Resource = None # Even passing this as None saves the result in S3 storage
+    position_csv_files: dict # Adding dependency for positions metadata
     ) -> None:
     '''
     This function reads the position data, cleans it, and saves it back as a csv.
@@ -66,8 +65,7 @@ def consolidated_position_and_title(
     deps=["consolidated_position_and_title"]
 )
 def positions_data_with_persons_info(
-    context: OpExecutionContext, 
-    s3: S3Resource = None
+    context: OpExecutionContext
     ) -> None:
     '''
     This function extracts person information from the positions data and saves a new csv
